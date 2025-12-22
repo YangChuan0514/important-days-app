@@ -1,0 +1,49 @@
+{
+  "name": "important-days-backend",
+  "version": "1.0.0",
+  "description": "重要日子提醒小程序后端",
+  "private": true,
+  "egg": {
+    "typescript": false,
+    "declarations": true
+  },
+  "scripts": {
+    "start": "egg-scripts start --daemon --title=important-days-backend",
+    "stop": "egg-scripts stop --title=important-days-backend",
+    "dev": "egg-bin dev",
+    "debug": "egg-bin debug",
+    "test": "npm run lint -- --fix && npm run test-local",
+    "test-local": "egg-bin test",
+    "cov": "egg-bin cov",
+    "ci": "npm run lint && npm run cov",
+    "autod": "autod",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "egg": "^3.0.0",
+    "egg-cors": "^2.2.3",
+    "egg-redis": "^2.4.0",
+    "egg-scripts": "^2.15.0",
+    "egg-sequelize": "^6.0.0",
+    "sequelize": "^6.35.0",
+    "mysql2": "^3.9.0",
+    "jsonwebtoken": "^9.0.2",
+    "moment": "^2.29.4",
+    "node-cron": "^3.0.3",
+    "axios": "^1.7.9",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "autod": "^3.1.1",
+    "autod-egg": "^1.1.0",
+    "egg-bin": "^6.0.0",
+    "egg-mock": "^5.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-egg": "^12.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
