@@ -4,11 +4,13 @@
 
 import 'egg';
 import ExportAuth = require('../../../app/middleware/auth');
+import ExportCors = require('../../../app/middleware/cors');
 import ExportErrorHandler = require('../../../app/middleware/error_handler');
 
 declare module 'egg' {
   interface IMiddleware {
     auth: typeof ExportAuth;
+    cors: typeof ExportCors;
     errorHandler: typeof ExportErrorHandler;
   }
 }

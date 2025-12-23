@@ -10,8 +10,9 @@ exports.redis = {
   package: 'egg-redis',
 };
 
-exports.cors = {
-  enable: true,
-  package: 'egg-cors',
-};
+// 使用自定义 CORS 中间件，禁用 egg-cors 插件以避免冲突
+// exports.cors = {
+//   enable: true,
+//   package: 'egg-cors',
+// };
 
