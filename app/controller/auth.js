@@ -66,9 +66,14 @@ class AuthController extends Controller {
         });
       }
 
-      // 保存 session_key 到 Redis（用于解密手机号）
+      // 保存 session_key 到 Redis（用于解密手机号），如果 Redis 可用
       if (session_key) {
-        await ctx.app.redis.set(`session_key:${openid}`, session_key, 'EX', 7200);
+        try {
+          await ctx.app.redis.set(`session_key:${openid}`, session_key, 'EX', 7200);
+        } catch (error) {
+          // Redis 不可用，记录警告但不影响登录
+          ctx.logger.warn('Redis 不可用，无法缓存 session_key:', error.message);
+        }
       }
 
       // 生成JWT token
@@ -166,8 +171,13 @@ class AuthController extends Controller {
         user.phone = phoneNumber;
       }
 
-      // 保存 session_key 到 Redis
-      await ctx.app.redis.set(`session_key:${openid}`, session_key, 'EX', 7200);
+      // 保存 session_key 到 Redis，如果 Redis 可用
+      try {
+        await ctx.app.redis.set(`session_key:${openid}`, session_key, 'EX', 7200);
+      } catch (error) {
+        // Redis 不可用，记录警告但不影响登录
+        ctx.logger.warn('Redis 不可用，无法缓存 session_key:', error.message);
+      }
 
       // 生成JWT token
       console.log(ctx.app.config.jwt.secret,'-22222--->')

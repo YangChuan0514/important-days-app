@@ -13,6 +13,11 @@ module.exports = () => {
         ? 'Internal Server Error'
         : err.message;
 
+      // 确保错误响应也包含 CORS 头
+      ctx.set('Access-Control-Allow-Origin', '*');
+      ctx.set('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS');
+      ctx.set('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin');
+      
       ctx.status = status;
       ctx.body = {
         code: status,

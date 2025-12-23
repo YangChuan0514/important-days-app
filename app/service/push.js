@@ -443,10 +443,15 @@ class PushService extends Service {
     const { app } = this;
     const cacheKey = "wechat_access_token";
     
-    // 从Redis获取缓存
-    const cached = await app.redis.get(cacheKey);
-    if (cached) {
-      return cached;
+    // 从Redis获取缓存（如果 Redis 可用）
+    try {
+      const cached = await app.redis.get(cacheKey);
+      if (cached) {
+        return cached;
+      }
+    } catch (error) {
+      // Redis 不可用，继续从微信获取
+      app.logger.warn('Redis 不可用，跳过缓存:', error.message);
     }
 
     // 从微信获取
@@ -457,8 +462,13 @@ class PushService extends Service {
       const token = response.data.access_token;
       const expiresIn = response.data.expires_in || 7200;
       
-      // 缓存token（提前5分钟过期）
-      await app.redis.set(cacheKey, token, "EX", expiresIn - 300);
+      // 缓存token（提前5分钟过期），如果 Redis 可用
+      try {
+        await app.redis.set(cacheKey, token, "EX", expiresIn - 300);
+      } catch (error) {
+        // Redis 不可用，忽略缓存错误
+        app.logger.warn('Redis 不可用，跳过缓存写入:', error.message);
+      }
       
       return token;
     }

@@ -4,8 +4,8 @@ module.exports = appInfo => {
   // 应用基础配置
   config.keys = appInfo.name + '_secret_key_change_in_production';
 
-  // 中间件配置
-  config.middleware = ['errorHandler', 'auth'];
+  // 中间件配置（CORS 放在最前面，确保所有响应都包含 CORS 头）
+  config.middleware = ['cors', 'errorHandler', 'auth'];
   
   // auth中间件配置（只使用ignore，排除不需要认证的路径）
   config.auth = {
@@ -23,7 +23,10 @@ module.exports = appInfo => {
   // CORS配置
   config.cors = {
     origin: '*',
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+    allowHeaders: 'Content-Type,Authorization,X-Requested-With,Accept,Origin',
+    exposeHeaders: 'Content-Length,Content-Type',
+    credentials: false, // 当 origin 为 '*' 时，credentials 必须为 false
   };
 
   // Sequelize配置（支持MySQL 8.0+）
@@ -57,6 +60,9 @@ module.exports = appInfo => {
       host: process.env.REDIS_HOST || '127.0.0.1',
       password: process.env.REDIS_PASSWORD || '',
       db: 0,
+      // 连接失败时不抛出错误，允许应用继续运行
+      retryStrategy: () => null, // 连接失败时不重试
+      enableOfflineQueue: false, // 禁用离线队列，避免连接失败时阻塞
     },
   };
 

@@ -24,6 +24,10 @@ module.exports = () => {
     // 获取token
     const token = ctx.headers.authorization;
     if (!token || !token.startsWith("Bearer ")) {
+      // 确保错误响应也包含 CORS 头
+      ctx.set('Access-Control-Allow-Origin', '*');
+      ctx.set('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS');
+      ctx.set('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin');
       ctx.status = 401;
       ctx.body = {
         code: 401,
@@ -48,6 +52,10 @@ module.exports = () => {
         path: ctx.path,
         tokenPrefix: token ? token.substring(0, 20) + '...' : 'no token',
       });
+      // 确保错误响应也包含 CORS 头
+      ctx.set('Access-Control-Allow-Origin', '*');
+      ctx.set('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS');
+      ctx.set('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin');
       ctx.status = 401;
       ctx.body = {
         code: 401,
